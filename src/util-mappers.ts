@@ -1,9 +1,10 @@
-import { FnMapper } from "./core-types";
+import { arrayMap, mapperBuilder } from "./core-mappers";
+import { FnMapper, MapperDefinition } from "./core-types";
 
-export function map<Src, Out, C>( fnMapper: FnMapper<Src, Out, C>): FnMapper<Src[], Out[], C> {
-  return (src, ctx) => {
-    return src.map( el => fnMapper(el, ctx));
-  };
+
+export function a<Src extends object, Out extends object, C= any>(mapperDef: MapperDefinition<Src,Out,C>): FnMapper<Src[],Out[], C> {
+  const mapper = mapperBuilder(mapperDef);
+  return arrayMap(mapper);
 }
 
-export const arrayMap = map;
+export const arrayObj = a;

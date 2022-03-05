@@ -1,7 +1,7 @@
-import { arrayObj, f, a, field, mb } from '../src/core-mappers'
-import { MapperDefinition } from '../src/core-types'
-import { pipe } from '../src/mapper-pipe'
-import { arrayMap, map } from '../src/util-mappers'
+import {  f, field, map, mb } from '../src/core-mappers';
+import { MapperDefinition } from '../src/core-types';
+import { pipe } from '../src/mapper-pipe';
+import { arrayObj, a } from '../src/util-mappers';
 
 interface InputTypeWithArray {
   x: number

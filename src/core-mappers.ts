@@ -1,19 +1,22 @@
 import { FnMapper, MapperDefinition } from './core-types';
 
 
-export function mb<Src extends object, Out extends object, C = any>(mapperDef: MapperDefinition<Src,Out,C>): FnMapper<Src, Out, C> {
+export function mb<Src extends object, Out extends object, C = any, OutFact extends Out = Out>(mapperDef: MapperDefinition<Src,Out,C>, outFactory?: (src: Src, ctx: C) => OutFact): FnMapper<Src, OutFact, C> {
 
   return (src, ctx) => {
-    const out: Partial<Out> = {};
-
-    let key: keyof Out;
-    for(key in mapperDef){
-      const fn = mapperDef[key] as FnMapper<Src, any, any>;
-      const propOut = fn(src, ctx);
-      out[key] = propOut;
+    let out: OutFact;
+    if(outFactory){
+      out = outFactory(src, ctx);
+    }else{
+      out = {} as OutFact;
     }
 
-    return out as Out;
+    for(const key in mapperDef){
+      const fn = mapperDef[key] as FnMapper<Src, any, any>;
+      out[key] = fn(src, ctx);
+    }
+
+    return out;
   };
 }
 
@@ -28,11 +31,10 @@ export function f<Src extends object, K extends keyof Src, C= any>( key: K): FnM
 
 export const field = f;
 
-export function a<Src extends object, Out extends object, C= any>(mapperDef: MapperDefinition<Src,Out,C>): FnMapper<Src[],Out[], C> {
-  const mapper = mapperBuilder(mapperDef);
+export function map<Src, Out, C>( fnMapper: FnMapper<Src, Out, C>): FnMapper<Src[], Out[], C> {
   return (src, ctx) => {
-    return src.map( el => mapper(el, ctx));
+    return src.map( el => fnMapper(el, ctx));
   };
 }
 
-export const arrayObj = a;
+export const arrayMap = map;
