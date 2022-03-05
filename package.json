@@ -1,0 +1,9 @@
+{
+  "name": "typescript-mapping",
+  "version": "1.0.0",
+  "description": "Map typescript types",
+  "main": "index.js",
+  "repository": "git@github.com:giuseppe-gitHub/typescript-mapping.git",
+  "author": "giuseppe.pace <giuseppe.pace.posta@gmail.com>",
+  "license": "MIT"
+}
