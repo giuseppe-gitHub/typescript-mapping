@@ -1,7 +1,7 @@
-import { arrayObj, field, mb } from '../src/core-mappers'
+import { arrayObj, f, a, field, mb } from '../src/core-mappers'
 import { MapperDefinition } from '../src/core-types'
 import { pipe } from '../src/mapper-pipe'
-import { arrayField } from '../src/util-mappers'
+import { arrayMap, map } from '../src/util-mappers'
 
 interface InputTypeWithArray {
   x: number
@@ -81,15 +81,15 @@ describe('array-mapping', () => {
 
   it('array mapping with array transform', () => {
     const mapperType: MapperDefinition<InputTypeWithArray, OutputTypeWithArray> = {
-      a: field('x'),
-      b: field('y'),
+      a: f('x'),
+      b: f('y'),
       arrayPropOut: pipe(
-        field('arrayProp'),
-        arrayObj({
+        f('arrayProp'),
+        a({
           one: field('first'),
           two: field('second'),
         }),
-        arrayField((src) => {
+        map((src) => {
           src.one = src.one + 1
           return src
         })
@@ -135,8 +135,8 @@ describe('array-mapping', () => {
   it('array base type mapping', () => {
     const mapperType: MapperDefinition<InputWithArray2, OutputWithArray2> = {
       outputArrayProp: pipe(
-        field('arrayProp'),
-        arrayField((src) => parseInt(src))
+        f('arrayProp'),
+        map((src) => parseInt(src))
       ),
     }
 

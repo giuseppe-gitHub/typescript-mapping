@@ -22,14 +22,17 @@ export const mapperBuilder = mb;
 
 
 
-export function field<Src extends object, K extends keyof Src, C= any>( key: K): FnMapper<Src, Src[K], C> {
+export function f<Src extends object, K extends keyof Src, C= any>( key: K): FnMapper<Src, Src[K], C> {
   return (src, _ctx) => src[key];
 }
 
+export const field = f;
 
-export function arrayObj<Src extends object, Out extends object, C= any>(mapperDef: MapperDefinition<Src,Out,C>): FnMapper<Src[],Out[], C> {
+export function a<Src extends object, Out extends object, C= any>(mapperDef: MapperDefinition<Src,Out,C>): FnMapper<Src[],Out[], C> {
   const mapper = mapperBuilder(mapperDef);
   return (src, ctx) => {
     return src.map( el => mapper(el, ctx));
   };
 }
+
+export const arrayObj = a;

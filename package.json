@@ -7,9 +7,11 @@
   "author": "giuseppe.pace <giuseppe.pace.posta@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "compile": "tsc"
   },
   "devDependencies": {
+    "@tsconfig/node14": "^1.0.1",
     "@types/jest": "^27.4.1",
     "jest": "^27.5.1",
     "ts-jest": "^27.1.3",
