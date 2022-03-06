@@ -1,7 +1,7 @@
-import { field, mb } from '../src/core-mappers'
+import { f, field, mb } from '../src/core-mappers'
 import { MapperDefinition } from '../src/core-types'
 import { pipe } from '../src/mapper-pipe'
-import { transform } from '../src/util-mappers'
+import { nf, tap, transform } from '../src/util-mappers'
 
 interface InnerInputType {
   first: number
@@ -23,6 +23,24 @@ interface OutputType {
   b: string
 
   innerOutput: InnerOutputType
+}
+
+interface NestedInputType {
+  a: {
+    b: {
+      c: {
+        d: {
+          e: {
+            f: string;
+          }
+        }
+      }
+    }
+  }
+}
+
+interface UnNestedOutputTYpe {
+  prop: string;
 }
 
 describe('base-mapping', () => {
@@ -176,5 +194,72 @@ describe('base-mapping', () => {
     const actual = mapper(input, {})
 
     expect(actual).toEqual(expected)
+  })
+
+  it('nestedFields should work', () => {
+    const mapperDef: MapperDefinition<NestedInputType, UnNestedOutputTYpe> = {
+      prop: nf('a', 'b', 'c', 'd', 'e', 'f')
+    };
+
+    const input: NestedInputType = {
+      a: {
+        b: {
+          c: {
+            d: {
+              e: {
+                f: 'value'
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const expected: UnNestedOutputTYpe = {
+      prop: 'value'
+    };
+
+    const mapper = mb(mapperDef);
+
+    const actual = mapper(input, {});
+
+    expect(actual).toEqual(expected);
+
+  })
+
+  it('nestedFields pipe with field should work', () => {
+    const mapperDef: MapperDefinition<NestedInputType, UnNestedOutputTYpe> = {
+      prop: pipe(nf('a', 'b', 'c', 'd', 'e'), f('f'), tap((_src, ctx) => {
+        ctx.val = 42;
+      }))
+    };
+
+    const input: NestedInputType = {
+      a: {
+        b: {
+          c: {
+            d: {
+              e: {
+                f: 'value'
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const expected: UnNestedOutputTYpe = {
+      prop: 'value'
+    };
+
+    const mapper = mb(mapperDef);
+
+    const ctx: any = {};
+    const actual = mapper(input, ctx);
+
+    expect(actual).toEqual(expected);
+
+    expect(ctx.val).toBe(42);
+
   })
 })

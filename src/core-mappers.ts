@@ -39,3 +39,8 @@ export function arrayMap<Src, Out, C>( fnMapper: FnMapper<Src, Out, C>): FnMappe
 }
 
 export const map = arrayMap;
+
+
+export function identity<Src, C>(): FnMapper<Src, Src, C> {
+  return (src) => src;
+}
