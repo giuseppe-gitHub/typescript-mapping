@@ -22,6 +22,12 @@ export function tap<Src, C = any>(mapper: (src: Src, ctx: C) => void): FnMapper<
   }
 }
 
+export function constant<Src, Out, C = any>(out: Out): FnMapper<Src, Out, C> {
+  return () => out;
+}
+
+export const c = constant;
+
 export function nestedFields<Src, C>(): FnMapper<Src, Src, C>
 export function nestedFields<Src extends object, K extends keyof Src, C = any>(key: K): FnMapper<Src, Src[K], C>
 export function nestedFields<Src extends object, K1 extends keyof Src, K2 extends keyof Src[K1], C = any>(key1: K1, key2: K2): FnMapper<Src, Src[K1][K2], C>

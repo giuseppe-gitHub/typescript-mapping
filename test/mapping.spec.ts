@@ -1,7 +1,7 @@
 import { f, field, mb } from '../src/core-mappers'
 import { MapperDefinition } from '../src/core-types'
 import { pipe } from '../src/mapper-pipe'
-import { endo, fd, fo, nf, nfd, tap } from '../src/util-mappers'
+import { c, endo, fd, fo, nf, nfd, tap } from '../src/util-mappers'
 
 interface InnerInputType {
   first: number
@@ -363,7 +363,7 @@ describe('base-mapping', () => {
   it('nestedFieldsDefaultValue with default should work more nested using default', () => {
     const mapperDef: MapperDefinition<NestedInputTypeWithUndef, UnNestedOutputTYpe2> = {
       prop: nfd('dfVal', 'a', 'b', 'c', 'd'),
-      otherProp: f('otherProp')
+      otherProp: c(343),
     }
 
     const input: NestedInputTypeWithUndef = {
@@ -375,7 +375,7 @@ describe('base-mapping', () => {
 
     const expected: UnNestedOutputTYpe2 = {
       prop: 'dfVal',
-      otherProp: 43
+      otherProp: 343
     }
 
     const mapper = mb(mapperDef)
