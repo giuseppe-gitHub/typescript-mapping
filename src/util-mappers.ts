@@ -9,9 +9,11 @@ export function arrayObj<Src extends object, Out extends object, C = any>(mapper
 
 export const a = arrayObj
 
-export function transform<Src, C = any>(mapper: FnMapper<Src, Src, C>): FnMapper<Src, Src, C> {
+export function endomorphism<Src, C = any>(mapper: FnMapper<Src, Src, C>): FnMapper<Src, Src, C> {
   return mapper
 }
+
+export const endo = endomorphism;
 
 export function tap<Src, C = any>(mapper: (src: Src, ctx: C) => void): FnMapper<Src, Src, C> {
   return (src, ctx) => {

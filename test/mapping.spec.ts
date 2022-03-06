@@ -1,7 +1,7 @@
-import { f, field, mb } from '../src/core-mappers'
-import { MapperDefinition } from '../src/core-types'
-import { pipe } from '../src/mapper-pipe'
-import { fo, nf, tap, transform } from '../src/util-mappers'
+import { f, field, mb } from '../src/core-mappers';
+import { MapperDefinition } from '../src/core-types';
+import { pipe } from '../src/mapper-pipe';
+import { endo, fo, nf, tap } from '../src/util-mappers';
 
 interface InnerInputType {
   first: number
@@ -91,7 +91,7 @@ describe('base-mapping', () => {
           one: field('first'),
           two: field('second'),
         }),
-        transform((src) => {
+        endo((src) => {
           if (src.two === 'second') src.two = 'two'
           return src
         })
