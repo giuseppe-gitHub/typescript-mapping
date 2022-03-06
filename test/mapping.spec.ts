@@ -1,24 +1,28 @@
 import { field, mb } from '../src/core-mappers'
 import { MapperDefinition } from '../src/core-types'
 import { pipe } from '../src/mapper-pipe'
+import { transform } from '../src/util-mappers'
 
+interface InnerInputType {
+  first: number
+  second: string
+}
 interface InputType {
   x: number
   y: string
-  innerInput: {
-    first: number
-    second: string
-  }
+  innerInput: InnerInputType
+}
+
+interface InnerOutputType {
+  one: number
+  two: string
 }
 
 interface OutputType {
   a: number
   b: string
 
-  innerOutput: {
-    one: number
-    two: string
-  }
+  innerOutput: InnerOutputType
 }
 
 describe('base-mapping', () => {
@@ -69,10 +73,10 @@ describe('base-mapping', () => {
           one: field('first'),
           two: field('second'),
         }),
-        (src) => {
+        transform((src) => {
           if (src.two === 'second') src.two = 'two'
           return src
-        }
+        })
       ),
     }
 

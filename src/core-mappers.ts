@@ -1,14 +1,15 @@
-import { FnMapper, MapperDefinition } from './core-types';
+import { FnMapper, FnMapperFact, MapperDefinition } from './core-types';
 
+export type OutputFactory<Src, Out, C= any> = (src: Src, ctx: C) => Out;
 
-export function mb<Src extends object, Out extends object, C = any, OutFact extends Out = Out>(mapperDef: MapperDefinition<Src,Out,C>, outFactory?: (src: Src, ctx: C) => OutFact): FnMapper<Src, OutFact, C> {
+export function mb<Src extends object, Out extends object, C = any>(mapperDef: MapperDefinition<Src,Out,C>, outFactory?: OutputFactory<Src,Out, C>): FnMapper<Src, Out, C> {
 
   return (src, ctx) => {
-    let out: OutFact;
+    let out: Out;
     if(outFactory){
       out = outFactory(src, ctx);
     }else{
-      out = {} as OutFact;
+      out = {} as Out;
     }
 
     for(const key in mapperDef){

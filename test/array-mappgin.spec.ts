@@ -3,23 +3,27 @@ import { MapperDefinition } from '../src/core-types';
 import { pipe } from '../src/mapper-pipe';
 import { arrayObj, a } from '../src/util-mappers';
 
+interface InnerInputType {
+  first: number
+  second: string
+}
+
 interface InputTypeWithArray {
   x: number
   y: string
-  arrayProp: {
-    first: number
-    second: string
-  }[]
+  arrayProp: InnerInputType[]
+}
+
+interface InnerOutputType {
+  one: number
+  two: string
 }
 
 interface OutputTypeWithArray {
   a: number
   b: string
 
-  arrayPropOut: {
-    one: number
-    two: string
-  }[]
+  arrayPropOut: InnerOutputType[]
 }
 
 interface InputWithArray2 {

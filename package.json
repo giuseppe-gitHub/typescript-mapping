@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "compile": "tsc"
+    "compile": "tsc",
+    "clear:dist": "rm -r dist"
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",
