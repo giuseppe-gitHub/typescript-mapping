@@ -1,7 +1,7 @@
 import { f, field, mb } from '../src/core-mappers'
 import { MapperDefinition } from '../src/core-types'
 import { pipe } from '../src/mapper-pipe'
-import { nf, tap, transform } from '../src/util-mappers'
+import { fo, nf, tap, transform } from '../src/util-mappers'
 
 interface InnerInputType {
   first: number
@@ -31,7 +31,7 @@ interface NestedInputType {
       c: {
         d: {
           e: {
-            f: string;
+            f: string
           }
         }
       }
@@ -40,7 +40,7 @@ interface NestedInputType {
 }
 
 interface UnNestedOutputTYpe {
-  prop: string;
+  prop: string
 }
 
 describe('base-mapping', () => {
@@ -159,17 +159,14 @@ describe('base-mapping', () => {
     expect(actual).toEqual(expected)
   })
 
-  it('mapping with transformer', () => {
+  it('mapping with transformer and fieldSubObject', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
       a: pipe(field('x'), (n) => n + 1),
       b: field('y'),
-      innerOutput: pipe(
-        field('innerInput'),
-        mb({
-          one: field('first'),
-          two: field('second'),
-        })
-      ),
+      innerOutput: fo('innerInput', {
+        one: f('first'),
+        two: f('second'),
+      }),
     }
 
     const input: InputType = {
@@ -198,8 +195,8 @@ describe('base-mapping', () => {
 
   it('nestedFields should work', () => {
     const mapperDef: MapperDefinition<NestedInputType, UnNestedOutputTYpe> = {
-      prop: nf('a', 'b', 'c', 'd', 'e', 'f')
-    };
+      prop: nf('a', 'b', 'c', 'd', 'e', 'f'),
+    }
 
     const input: NestedInputType = {
       a: {
@@ -207,32 +204,35 @@ describe('base-mapping', () => {
           c: {
             d: {
               e: {
-                f: 'value'
-              }
-            }
-          }
-        }
-      }
-    };
+                f: 'value',
+              },
+            },
+          },
+        },
+      },
+    }
 
     const expected: UnNestedOutputTYpe = {
-      prop: 'value'
-    };
+      prop: 'value',
+    }
 
-    const mapper = mb(mapperDef);
+    const mapper = mb(mapperDef)
 
-    const actual = mapper(input, {});
+    const actual = mapper(input, {})
 
-    expect(actual).toEqual(expected);
-
+    expect(actual).toEqual(expected)
   })
 
   it('nestedFields pipe with field should work', () => {
     const mapperDef: MapperDefinition<NestedInputType, UnNestedOutputTYpe> = {
-      prop: pipe(nf('a', 'b', 'c', 'd', 'e'), f('f'), tap((_src, ctx) => {
-        ctx.val = 42;
-      }))
-    };
+      prop: pipe(
+        nf('a', 'b', 'c', 'd', 'e'),
+        f('f'),
+        tap((_src, ctx) => {
+          ctx.val = 42
+        })
+      ),
+    }
 
     const input: NestedInputType = {
       a: {
@@ -240,26 +240,25 @@ describe('base-mapping', () => {
           c: {
             d: {
               e: {
-                f: 'value'
-              }
-            }
-          }
-        }
-      }
-    };
+                f: 'value',
+              },
+            },
+          },
+        },
+      },
+    }
 
     const expected: UnNestedOutputTYpe = {
-      prop: 'value'
-    };
+      prop: 'value',
+    }
 
-    const mapper = mb(mapperDef);
+    const mapper = mb(mapperDef)
 
-    const ctx: any = {};
-    const actual = mapper(input, ctx);
+    const ctx: any = {}
+    const actual = mapper(input, ctx)
 
-    expect(actual).toEqual(expected);
+    expect(actual).toEqual(expected)
 
-    expect(ctx.val).toBe(42);
-
+    expect(ctx.val).toBe(42)
   })
 })

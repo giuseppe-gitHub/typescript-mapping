@@ -2,7 +2,7 @@ import { FnMapper, MapperDefinition } from './core-types';
 
 export type OutputFactory<Src, Out, C= any> = (src: Src, ctx: C) => Out;
 
-export function mapperBuilder<Src extends object, Out extends object, C = any>(mapperDef: MapperDefinition<Src,Out,C>, outFactory?: OutputFactory<Src,Out, C>): FnMapper<Src, Out, C> {
+export function mapperBuilder<Src, Out extends object, C = any>(mapperDef: MapperDefinition<Src,Out,C>, outFactory?: OutputFactory<Src,Out, C>): FnMapper<Src, Out, C> {
 
   return (src, ctx) => {
     let out: Out;
