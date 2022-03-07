@@ -10,6 +10,10 @@ export function pipe<Src, Out1, Out2, Out3, Out4, C = any> ( first: FnMapper<Src
 export function pipe<Src, Out1, Out2, Out3, Out4, Out5, C = any> ( first: FnMapper<Src, Out1 , C>, second: FnMapper<Out1, Out2 , C>, third: FnMapper<Out2, Out3 , C>, fourth: FnMapper<Out3, Out4 , C>, fifth: FnMapper<Out4, Out5 , C> ) : FnMapper<Src, Out5, C>;
 export function pipe<Src, Out1, Out2, Out3, Out4, Out5, Out6, C = any> ( first: FnMapper<Src, Out1 , C>, second: FnMapper<Out1, Out2 , C>, third: FnMapper<Out2, Out3 , C>, fourth: FnMapper<Out3, Out4 , C>, fifth: FnMapper<Out4, Out5 , C>, sixth: FnMapper<Out5, Out6 , C> ) : FnMapper<Src, Out6, C>;
 export function pipe(...fnMappers: Array<FnMapper<any, any, any>>): FnMapper<any,any, any> {
+return restParamPipe(...fnMappers);
+}
+
+export function restParamPipe(...fnMappers: Array<FnMapper<any, any, any>>): FnMapper<any,any, any> {
 
   if(fnMappers.length === 0){
     return identity;

@@ -1,7 +1,7 @@
-import { f, mb } from '../src/core-mappers'
+import { mb } from '../src/core-mappers'
 import { MapperDefinition } from '../src/core-types'
 import { pipe } from '../src/mapper-pipe'
-import { a } from '../src/util-mappers'
+import { a, f } from '../src/util-mappers'
 import { OmitMethods } from '../src/util-types'
 
 class InputClass {

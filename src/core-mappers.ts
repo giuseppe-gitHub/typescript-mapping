@@ -25,13 +25,6 @@ export const mb = mapperBuilder;
 
 
 
-
-export function field<Src extends object, K extends keyof Src, C= any>( key: K): FnMapper<Src, Src[K], C> {
-  return (src, _ctx) => src[key];
-}
-
-export const f = field;
-
 export function arrayMap<Src, Out, C>( fnMapper: FnMapper<Src, Out, C>): FnMapper<Src[], Out[], C> {
   return (src, ctx) => {
     return src.map( el => fnMapper(el, ctx));

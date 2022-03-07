@@ -1,7 +1,7 @@
-import { f, field, mb } from '../src/core-mappers'
+import { mb } from '../src/core-mappers'
 import { MapperDefinition } from '../src/core-types'
 import { pipe } from '../src/mapper-pipe'
-import { c, endo, fd, fo, nf, nfd, tap } from '../src/util-mappers'
+import { c, endo, fd, fo, f, nfd, tap, fields } from '../src/util-mappers'
 
 interface InnerInputType {
   first: number
@@ -71,12 +71,12 @@ describe('base-mapping', () => {
   it('base mapping', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
       a: fd('x', 101),
-      b: field('y'),
+      b: fields('y'),
       innerOutput: pipe(
-        field('innerInput'),
+        fields('innerInput'),
         mb({
-          one: field('first'),
-          two: field('second'),
+          one: fields('first'),
+          two: fields('second'),
         })
       ),
     }
@@ -107,12 +107,12 @@ describe('base-mapping', () => {
   it('mapping with transformer as postmapper', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
       a: fd('x', 34),
-      b: field('y'),
+      b: f('y'),
       innerOutput: pipe(
-        field('innerInput'),
+        f('innerInput'),
         mb({
-          one: field('first'),
-          two: field('second'),
+          one: f('first'),
+          two: f('second'),
         }),
         endo((src) => {
           if (src.two === 'second') src.two = 'two'
@@ -147,13 +147,13 @@ describe('base-mapping', () => {
 
   it('mapping with field pipe', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
-      a: pipe(field('innerInput'), field('first')),
-      b: field('y'),
+      a: pipe(f('innerInput'), f('first')),
+      b: f('y'),
       innerOutput: pipe(
-        field('innerInput'),
+        f('innerInput'),
         mb({
-          one: field('first'),
-          two: field('second'),
+          one: f('first'),
+          two: f('second'),
         })
       ),
     }
@@ -185,7 +185,7 @@ describe('base-mapping', () => {
   it('mapping with transformer and fieldSubObject', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
       a: pipe(fd('x', 101), (n) => n + 1),
-      b: field('y'),
+      b: f('y'),
       innerOutput: fo('innerInput', {
         one: f('first'),
         two: f('second'),
@@ -218,7 +218,7 @@ describe('base-mapping', () => {
 
   it('nestedFields should work', () => {
     const mapperDef: MapperDefinition<NestedInputType, UnNestedOutputTYpe> = {
-      prop: nf('a', 'b', 'c', 'd', 'e', 'f'),
+      prop: f('a', 'b', 'c', 'd', 'e', 'f'),
     }
 
     const input: NestedInputType = {
@@ -249,7 +249,7 @@ describe('base-mapping', () => {
   it('nestedFields pipe with field should work', () => {
     const mapperDef: MapperDefinition<NestedInputType, UnNestedOutputTYpe> = {
       prop: pipe(
-        nf('a', 'b', 'c', 'd', 'e'),
+        f('a', 'b', 'c', 'd', 'e'),
         f('f'),
         tap((_src, ctx) => {
           ctx.val = 42

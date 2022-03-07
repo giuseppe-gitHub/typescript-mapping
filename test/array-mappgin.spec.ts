@@ -1,7 +1,7 @@
-import {  f, field, map, mb } from '../src/core-mappers';
+import {  map, mb } from '../src/core-mappers';
 import { MapperDefinition } from '../src/core-types';
 import { pipe } from '../src/mapper-pipe';
-import { arrayObj, a } from '../src/util-mappers';
+import { arrayObj, a, f, fields } from '../src/util-mappers';
 
 interface InnerInputType {
   first: number
@@ -36,13 +36,13 @@ interface OutputWithArray2 {
 describe('array-mapping', () => {
   it('array mapping', () => {
     const mapperType: MapperDefinition<InputTypeWithArray, OutputTypeWithArray> = {
-      a: field('x'),
-      b: field('y'),
+      a: f('x'),
+      b: fields('y'),
       arrayPropOut: pipe(
-        field('arrayProp'),
+        fields('arrayProp'),
         arrayObj({
-          one: field('first'),
-          two: field('second'),
+          one: fields('first'),
+          two: fields('second'),
         })
       ),
     }
@@ -90,8 +90,8 @@ describe('array-mapping', () => {
       arrayPropOut: pipe(
         f('arrayProp'),
         a({
-          one: field('first'),
-          two: field('second'),
+          one: fields('first'),
+          two: fields('second'),
         }),
         map((src) => {
           src.one = src.one + 1
