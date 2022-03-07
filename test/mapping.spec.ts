@@ -145,6 +145,44 @@ describe('base-mapping', () => {
     expect(actual).toEqual(expected)
   })
 
+
+  it('mapping with nfd used as fd', () => {
+    const mapperType: MapperDefinition<InputType, OutputType> = {
+      a: nfd(34 , 'x'),
+      b: f('y'),
+      innerOutput: pipe(
+        f('innerInput'),
+        mb({
+          one: f('first'),
+          two: f('second'),
+        })
+      ),
+    }
+
+    const input: InputType = {
+      y: 'ciao',
+      innerInput: {
+        first: 1,
+        second: 'second',
+      },
+    }
+
+    const expected: OutputType = {
+      a: 34,
+      b: 'ciao',
+      innerOutput: {
+        one: 1,
+        two: 'second',
+      },
+    }
+
+    const mapper = mb(mapperType)
+    const actual = mapper(input, {})
+
+    expect(actual).toEqual(expected)
+  })
+
+
   it('mapping with field pipe', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
       a: pipe(f('innerInput'), f('first')),
