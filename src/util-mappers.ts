@@ -23,16 +23,14 @@ export function tap<Src, C = any>(mapper: (src: Src, ctx: C) => void): FnMapper<
 }
 
 export function constant<Src, Out, C = any>(out: Out): FnMapper<Src, Out, C> {
-  return () => out;
+  return () => out
 }
 
-export const c = constant;
+export const c = constant
 
-
-function utilField<Src extends object, K extends keyof Src, C= any>( key: K): FnMapper<Src, Src[K], C> {
-  return (src, _ctx) => src[key];
+function utilField<Src extends object, K extends keyof Src, C = any>(key: K): FnMapper<Src, Src[K], C> {
+  return (src, _ctx) => src[key]
 }
-
 
 export function fields<Src, C>(): FnMapper<Src, Src, C>
 export function fields<Src extends object, K extends keyof Src, C = any>(key: K): FnMapper<Src, Src[K], C>
@@ -67,7 +65,7 @@ export function fields<
 export function fields(...keys: Array<string>): FnMapper<any, any, any> {
   const fieldMappers = keys.map((k) => utilField<any, string>(k))
 
-  return restParamPipe(...fieldMappers);
+  return restParamPipe(...fieldMappers)
 }
 
 export const f = fields
@@ -78,14 +76,13 @@ export function fieldSubObject<Src extends object, K extends keyof Src, Out exte
 
 export const fo = fieldSubObject
 
-
 type ExcNullUndef<T> = Exclude<T, undefined | null>
 
-
 export function defaultValue<Src, C>(defaultVale: ExcNullUndef<Src>): FnMapper<Src | undefined, ExcNullUndef<Src>, C> {
-  return (src) => (src ? src! : defaultVale) 
+  return (src) => (src ? src! : defaultVale)
 }
 
+export const d = defaultValue;
 
 type NesExclUnd1<T, K1 extends keyof ExcNullUndef<T>> = ExcNullUndef<ExcNullUndef<T>[K1]>
 
@@ -96,40 +93,33 @@ type NesExclUnd4<T, K1 extends keyof ExcNullUndef<T>, K2 extends keyof NesExclUn
   NesExclUnd3<T, K1, K2, K3>[K4]
 >
 
-export function fieldsDefault<Src, C>(dfValue: ExcNullUndef<Src>): FnMapper<Src, ExcNullUndef<Src>, C>
-export function fieldsDefault<Src extends object, K extends keyof ExcNullUndef<Src>, C = any>(dV: NesExclUnd1<Src, K>, key: K): FnMapper<Src, NesExclUnd1<Src, K>, C>
-export function fieldsDefault<Src extends object, K1 extends keyof ExcNullUndef<Src>, K2 extends keyof NesExclUnd1<Src, K1>, C = any>(
-  dV: NesExclUnd2<Src, K1, K2>,
-  key1: K1,
-  key2: K2
-): FnMapper<Src, NesExclUnd2<Src, K1, K2>, C>
-export function fieldsDefault<Src extends object, K1 extends keyof ExcNullUndef<Src>, K2 extends keyof NesExclUnd1<Src, K1>, K3 extends keyof NesExclUnd2<Src, K1, K2>, C = any>(
-  dV: NesExclUnd3<Src, K1, K2, K3>,
+export function fieldsUndefined<Src, C>(): FnMapper<Src, Src, C>
+export function fieldsUndefined<Src extends object, K extends keyof ExcNullUndef<Src>, C = any>(key: K): FnMapper<Src, NesExclUnd1<Src, K> | undefined, C>
+export function fieldsUndefined<Src extends object, K1 extends keyof ExcNullUndef<Src>, K2 extends keyof NesExclUnd1<Src, K1>, C = any>(key1: K1, key2: K2): FnMapper<Src, NesExclUnd2<Src,K1, K2> | undefined, C>
+export function fieldsUndefined<Src extends object, K1 extends keyof ExcNullUndef<Src>, K2 extends keyof NesExclUnd1<Src, K1>, K3 extends keyof NesExclUnd2<Src, K1, K2>, C = any>(
   key1: K1,
   key2: K2,
   key3: K3
-): FnMapper<Src, NesExclUnd3<Src, K1, K2, K3>, C>
-export function fieldsDefault<
+): FnMapper<Src, NesExclUnd3<Src, K1, K2, K3> | undefined, C>
+export function fieldsUndefined<
   Src extends object,
   K1 extends keyof ExcNullUndef<Src>,
   K2 extends keyof NesExclUnd1<Src, K1>,
   K3 extends keyof NesExclUnd2<Src, K1, K2>,
   K4 extends keyof NesExclUnd3<Src, K1, K2, K3>,
   C = any
->(dV: NesExclUnd4<Src, K1, K2, K3, K4>, key1: K1, key2: K2, key3: K3, key4: K4): FnMapper<Src, NesExclUnd4<Src, K1, K2, K3, K4>, C>
-export function fieldsDefault(dfValue: any, ...keys: Array<string>): FnMapper<any, any, any> {
-
+>(key1: K1, key2: K2, key3: K3, key4: K4): FnMapper<Src, NesExclUnd4<Src, K1, K2, K3, K4> | undefined, C>
+export function fieldsUndefined(...keys: Array<string>): FnMapper<any, any, any> {
   const fieldMappers = keys.map((k) => innerFIeldDefaultValueHelper<any, string>(k))
 
-  return restParamPipe(restParamPipe(...fieldMappers), defaultValue(dfValue));
+  return restParamPipe(restParamPipe(...fieldMappers))
 }
 
-export const fd = fieldsDefault
+export const fu = fieldsUndefined
 
-
-function innerFIeldDefaultValueHelper<Src, K extends keyof Src, C = any>( key: K): FnMapper<Src, Src[K] | undefined,C>{
+function innerFIeldDefaultValueHelper<Src, K extends keyof Src, C = any>(key: K): FnMapper<Src, Src[K] | undefined, C> {
   return (src) => {
-    if(!src) return undefined;
-    return src[key];
+    if (!src) return undefined
+    return src[key]
   }
 }

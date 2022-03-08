@@ -1,7 +1,7 @@
 import { mb } from '../src/core-mappers'
 import { MapperDefinition } from '../src/core-types'
 import { pipe } from '../src/mapper-pipe'
-import { c, endo, fd, fo, f, tap, fields } from '../src/util-mappers'
+import { c, endo, fu, fo, f, tap, fields, d } from '../src/util-mappers'
 
 interface InnerInputType {
   first: number
@@ -55,6 +55,9 @@ interface UnNestedOutputTYpe {
   prop: string
 }
 
+interface OutputWIthUndefined {
+  propUndef?: string;
+}
 
 interface UnNestedOutputTYpe2 {
   prop: string
@@ -70,7 +73,7 @@ interface ShallowNestInput {
 describe('base-mapping', () => {
   it('base mapping', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
-      a: fd(101, 'x'),
+      a: pipe(f('x'), d(101)),
       b: fields('y'),
       innerOutput: pipe(
         fields('innerInput'),
@@ -106,7 +109,7 @@ describe('base-mapping', () => {
 
   it('mapping with transformer as postmapper', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
-      a: fd(34, 'x'),
+      a: pipe(f('x'),  d(34)),
       b: f('y'),
       innerOutput: pipe(
         f('innerInput'),
@@ -148,7 +151,7 @@ describe('base-mapping', () => {
 
   it('mapping with nfd used as fd', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
-      a: fd(34 , 'x'),
+      a: pipe(fu('x'), d(34)),
       b: f('y'),
       innerOutput: pipe(
         f('innerInput'),
@@ -222,7 +225,7 @@ describe('base-mapping', () => {
 
   it('mapping with transformer and fieldSubObject', () => {
     const mapperType: MapperDefinition<InputType, OutputType> = {
-      a: pipe(fd(101, 'x'), (n) => n + 1),
+      a: pipe(fu('x'), d(101), (n) => n + 1),
       b: f('y'),
       innerOutput: fo('innerInput', {
         one: f('first'),
@@ -325,7 +328,7 @@ describe('base-mapping', () => {
 
   it('nestedFieldsDefaultValue should work', () => {
     const mapperDef: MapperDefinition<ShallowNestInput, UnNestedOutputTYpe> = {
-      prop: pipe(fd('dValue', 'a', 'b')),
+      prop: pipe(fu('a', 'b'), d('dfValue')),
     }
 
     const input: ShallowNestInput = {
@@ -348,7 +351,7 @@ describe('base-mapping', () => {
   })
   it('nestedFieldsDefaultValue with default should work', () => {
     const mapperDef: MapperDefinition<ShallowNestInput, UnNestedOutputTYpe> = {
-      prop: pipe(fd('dValue', 'a', 'b')),
+      prop: pipe(fu('a', 'b'), d('dValue')),
     }
 
     const input: ShallowNestInput = {
@@ -369,7 +372,7 @@ describe('base-mapping', () => {
 
   it('nestedFieldsDefaultValue with default should work more nested', () => {
     const mapperDef: MapperDefinition<NestedInputTypeWithUndef, UnNestedOutputTYpe2> = {
-      prop: fd('dfVal', 'a', 'b', 'c', 'd'),
+      prop: pipe(fu( 'a', 'b', 'c', 'd'), d('dfVal')),
       otherProp: f('otherProp')
     }
 
@@ -400,7 +403,7 @@ describe('base-mapping', () => {
 
   it('nestedFieldsDefaultValue with default should work more nested using default', () => {
     const mapperDef: MapperDefinition<NestedInputTypeWithUndef, UnNestedOutputTYpe2> = {
-      prop: fd('dfVal', 'a', 'b', 'c', 'd'),
+      prop: pipe(fu( 'a', 'b', 'c', 'd'), d('dfVal')),
       otherProp: c(343),
     }
 
@@ -414,6 +417,60 @@ describe('base-mapping', () => {
     const expected: UnNestedOutputTYpe2 = {
       prop: 'dfVal',
       otherProp: 343
+    }
+
+    const mapper = mb(mapperDef)
+
+    const ctx: any = {}
+    const actual = mapper(input, ctx)
+
+    expect(actual).toEqual(expected)
+
+  })
+
+  it('undefined output prop should result undefined', () => {
+    const mapperDef: MapperDefinition<NestedInputTypeWithUndef, OutputWIthUndefined> = {
+      propUndef: fu('a', 'b', 'c', 'd')
+    }
+
+    const input: NestedInputTypeWithUndef = {
+      a: {
+        b: {}
+      },
+      otherProp: 43
+    }
+
+    const expected: OutputWIthUndefined = {
+    }
+
+    const mapper = mb(mapperDef)
+
+    const ctx: any = {}
+    const actual = mapper(input, ctx)
+
+    expect(actual).toEqual(expected)
+
+  })
+
+
+  it('undefined output prop should have value', () => {
+    const mapperDef: MapperDefinition<NestedInputTypeWithUndef, OutputWIthUndefined> = {
+      propUndef: pipe(f('a', 'b'),fu('c','d'))
+    }
+
+    const input: NestedInputTypeWithUndef = {
+      a: {
+        b: {
+          c: {
+            d: 'ciao'
+          }
+        }
+      },
+      otherProp: 43
+    }
+
+    const expected: OutputWIthUndefined = {
+      propUndef: 'ciao'
     }
 
     const mapper = mb(mapperDef)
