@@ -76,34 +76,33 @@ export function fieldSubObject<Src extends object, K extends keyof Src, Out exte
 
 export const fo = fieldSubObject
 
-type ExcNullUndef<T> = Exclude<T, undefined | null>
 
-export function defaultValue<Src, C>(defaultVale: ExcNullUndef<Src>): FnMapper<Src | undefined, ExcNullUndef<Src>, C> {
-  return (src) => (src ? src! : defaultVale)
+export function defaultValue<Src, C>(defaultVale: NonNullable<Src>): FnMapper<Src | undefined, NonNullable<Src>, C> {
+  return (src) => (src ?? defaultVale)
 }
 
 export const d = defaultValue;
 
-type NesExclUnd1<T, K1 extends keyof ExcNullUndef<T>> = ExcNullUndef<ExcNullUndef<T>[K1]>
+type NesExclUnd1<T, K1 extends keyof NonNullable<T>> = NonNullable<NonNullable<T>[K1]>
 
-type NesExclUnd2<T, K1 extends keyof ExcNullUndef<T>, K2 extends keyof NesExclUnd1<T, K1>> = ExcNullUndef<NesExclUnd1<T, K1>[K2]>
+type NesExclUnd2<T, K1 extends keyof NonNullable<T>, K2 extends keyof NesExclUnd1<T, K1>> = NonNullable<NesExclUnd1<T, K1>[K2]>
 
-type NesExclUnd3<T, K1 extends keyof ExcNullUndef<T>, K2 extends keyof NesExclUnd1<T, K1>, K3 extends keyof NesExclUnd2<T, K1, K2>> = ExcNullUndef<NesExclUnd2<T, K1, K2>[K3]>
-type NesExclUnd4<T, K1 extends keyof ExcNullUndef<T>, K2 extends keyof NesExclUnd1<T, K1>, K3 extends keyof NesExclUnd2<T, K1, K2>, K4 extends keyof NesExclUnd3<T, K1, K2, K3>> = ExcNullUndef<
+type NesExclUnd3<T, K1 extends keyof NonNullable<T>, K2 extends keyof NesExclUnd1<T, K1>, K3 extends keyof NesExclUnd2<T, K1, K2>> = NonNullable<NesExclUnd2<T, K1, K2>[K3]>
+type NesExclUnd4<T, K1 extends keyof NonNullable<T>, K2 extends keyof NesExclUnd1<T, K1>, K3 extends keyof NesExclUnd2<T, K1, K2>, K4 extends keyof NesExclUnd3<T, K1, K2, K3>> = NonNullable<
   NesExclUnd3<T, K1, K2, K3>[K4]
 >
 
 export function fieldsUndefined<Src, C>(): FnMapper<Src, Src, C>
-export function fieldsUndefined<Src extends object, K extends keyof ExcNullUndef<Src>, C = any>(key: K): FnMapper<Src, NesExclUnd1<Src, K> | undefined, C>
-export function fieldsUndefined<Src extends object, K1 extends keyof ExcNullUndef<Src>, K2 extends keyof NesExclUnd1<Src, K1>, C = any>(key1: K1, key2: K2): FnMapper<Src, NesExclUnd2<Src,K1, K2> | undefined, C>
-export function fieldsUndefined<Src extends object, K1 extends keyof ExcNullUndef<Src>, K2 extends keyof NesExclUnd1<Src, K1>, K3 extends keyof NesExclUnd2<Src, K1, K2>, C = any>(
+export function fieldsUndefined<Src extends object, K extends keyof NonNullable<Src>, C = any>(key: K): FnMapper<Src, NesExclUnd1<Src, K> | undefined, C>
+export function fieldsUndefined<Src extends object, K1 extends keyof NonNullable<Src>, K2 extends keyof NesExclUnd1<Src, K1>, C = any>(key1: K1, key2: K2): FnMapper<Src, NesExclUnd2<Src,K1, K2> | undefined, C>
+export function fieldsUndefined<Src extends object, K1 extends keyof NonNullable<Src>, K2 extends keyof NesExclUnd1<Src, K1>, K3 extends keyof NesExclUnd2<Src, K1, K2>, C = any>(
   key1: K1,
   key2: K2,
   key3: K3
 ): FnMapper<Src, NesExclUnd3<Src, K1, K2, K3> | undefined, C>
 export function fieldsUndefined<
   Src extends object,
-  K1 extends keyof ExcNullUndef<Src>,
+  K1 extends keyof NonNullable<Src>,
   K2 extends keyof NesExclUnd1<Src, K1>,
   K3 extends keyof NesExclUnd2<Src, K1, K2>,
   K4 extends keyof NesExclUnd3<Src, K1, K2, K3>,
